@@ -1,16 +1,16 @@
+use std::collections::BTreeMap;
 use crate::client::WsConnection;
-use crate::model::method::Method;
 use crate::model::request::RpcParams;
 
 pub type TungsteniteResult = Result<tungstenite::Message, tungstenite::Error>;
 
 #[allow(unused)]
-pub struct SurrealDriver {
+pub struct Driver {
     conn: WsConnection
 }
 
 #[allow(unused)]
-impl SurrealDriver {
+impl Driver {
     pub fn new(conn: WsConnection) -> Self {
         Self {
             conn
@@ -21,7 +21,7 @@ impl SurrealDriver {
         self.conn.disconnect().await;
     }
 
-    pub async fn info(&mut self) -> TungsteniteResult {
-        self.conn.rpc(Method::Info, RpcParams::Array(Vec::new())).await
+    pub async fn message(&mut self, messages: BTreeMap<String, String>) -> TungsteniteResult {
+        self.conn.rpc(RpcParams::Message(messages)).await
     }
 }

@@ -1,5 +1,5 @@
 pub mod client;
-pub mod server;
+pub mod host;
 pub mod model {
     pub mod method;
     pub mod request;
@@ -13,7 +13,8 @@ pub mod driver {
 
 use client::WsConnection;
 use dotenv::dotenv;
-use std::env;
+use driver::driver::Driver;
+use std::{collections::BTreeMap, env};
 
 #[tokio::main]
 async fn main() {
@@ -25,8 +26,22 @@ async fn main() {
     let client = env::var("CLIENT");
     if let Ok(_client) = client {
         let mut conn = WsConnection::new(host.to_string(), port, false);
-        _ = conn.connect().await;  
+        _ = conn.connect().await;
+
+        let mut driver = Driver::new(conn);
+
+        let mut messages = BTreeMap::new();
+        messages.insert("Hello".to_string(), "World".to_string());
+        let result = driver.message(messages).await;
+        match result {
+            Ok(msg) => {         
+                println!("Message response {:?}", msg);    
+                driver.disconnect().await;
+                println!("Disconnected");
+            },
+            Err(_err) => ()
+        }
     } else {              
-        server::listen(host, port).await;
+        host::listen(host, port).await;
     }         
 }

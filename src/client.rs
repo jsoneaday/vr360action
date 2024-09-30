@@ -5,7 +5,6 @@ use tokio::net::TcpStream;
 use tungstenite::{client::IntoClientRequest, Error, Message, Result};
 use tokio_tungstenite::{connect_async, WebSocketStream, MaybeTlsStream};
 use super::{error::SurrealError, model::request::{RpcRequest, RpcParams}};
-use super::model::method::Method;
 use uuid::Uuid;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -56,17 +55,17 @@ impl WsConnection {
         self.writer.as_mut().unwrap().close().await
     }
 
-    pub async fn rpc(&mut self, method: Method, params: RpcParams) -> Result<Message, Error> {
-        let meth = method.as_str();
+    pub async fn rpc(&mut self, params: RpcParams) -> Result<Message, Error> {  
         let mut last_request_id = self.last_request_id.write().await;
         *last_request_id = Uuid::new_v4();
-        let rpc_req: RpcRequest = RpcRequest::new(last_request_id.to_string(), meth.to_string(), params);
+        let rpc_req: RpcRequest = RpcRequest::new(last_request_id.to_string(), params);
         let json = serde_json::to_string(&rpc_req);
         let json_txt = json.unwrap();
                 
         match (&mut self.writer, &mut self.reader) {
             (Some(writer), Some(reader)) => {
-                writer.send(Message::Text(json_txt)).await?;
+                writer.send(Message::Text(json_txt.clone())).await?;
+                println!("Message::Text sent, waiting response {}", json_txt);
                 
                 loop {
                     tokio::select! {
