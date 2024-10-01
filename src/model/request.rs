@@ -1,15 +1,14 @@
 use serde::{Deserialize, Serialize};
 use serde::ser::SerializeStruct;
 use std::mem::size_of;
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum RpcParams {
     //Objects(Vec<Object>),
-    Message(BTreeMap<String, String>),
-    Array(Vec<String>),
-    Query((String, BTreeMap<String, String>))
+    Message(HashMap<String, String>),
+    Array(Vec<String>)
 }
 
 #[derive(Debug)]

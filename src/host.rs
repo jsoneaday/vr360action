@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use futures_util::{StreamExt, SinkExt};
@@ -10,8 +10,8 @@ use lazy_static::lazy_static;
 use crate::model::request::{RpcParams, RpcRequest};
 
 lazy_static! {
-    static ref DATA: Arc<RwLock<BTreeMap<String, String>>> = {
-        let data = Arc::new(RwLock::new(BTreeMap::new()));
+    static ref DATA: Arc<RwLock<HashMap<String, String>>> = {
+        let data = Arc::new(RwLock::new(HashMap::new()));
 
         data
     };
@@ -20,7 +20,7 @@ lazy_static! {
 
 pub async fn listen(host: String, port: usize) {
     let addr = format!("{}:{}", host, port);
-
+    println!("addr: {:?}", addr);
     let listener = TcpListener::bind(addr).await.expect("Listener failed to bind to addr");
     println!("Listener started");
 
@@ -52,7 +52,7 @@ pub async fn listen(host: String, port: usize) {
 
                         println!("The inserted data: {:?}", write_data);
 
-                        write.send(Message::text("I got your message.".to_string())).await.expect("Failed to send replay");
+                        write.send(Message::text(format!("I got your message: {:?}", write_data))).await.expect("Failed to send replay");
                     }, 
                     _ => {
                         println!("Message given was not text: {:?}", msg);

@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 use crate::client::WsConnection;
 use crate::model::request::RpcParams;
 
@@ -21,7 +21,7 @@ impl Driver {
         self.conn.disconnect().await;
     }
 
-    pub async fn message(&mut self, messages: BTreeMap<String, String>) -> TungsteniteResult {
+    pub async fn message(&mut self, messages: HashMap<String, String>) -> TungsteniteResult {
         self.conn.rpc(RpcParams::Message(messages)).await
     }
 
@@ -29,7 +29,7 @@ impl Driver {
         // get pc info
 
         // setup tree
-        let info_messages = BTreeMap::new();
+        let info_messages = HashMap::new();
 
         self.conn.rpc(RpcParams::Message(info_messages)).await
     }

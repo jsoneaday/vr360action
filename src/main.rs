@@ -18,14 +18,18 @@ pub mod wmi {
 use client::WsConnection;
 use dotenv::dotenv;
 use driver::driver::Driver;
-use std::{collections::BTreeMap, env};
+use std::{collections::HashMap, env};
 
 #[tokio::main]
 async fn main() {
     dotenv().ok();
 
     let host = env::var("HOST").unwrap();
-    let port = env::var("PORT").unwrap().parse::<usize>().unwrap();
+    let host = host.trim().to_string();
+    let port = env::var("PORT").unwrap();
+    println!("host: {:?}", host);
+    println!("port: {:?}", port.trim());
+    let port = port.trim().parse::<usize>().unwrap();
 
     let client = env::var("CLIENT");
     if let Ok(_client) = client {
@@ -34,7 +38,7 @@ async fn main() {
 
         let mut driver = Driver::new(conn);
 
-        let mut messages = BTreeMap::new();
+        let mut messages = HashMap::new();
         messages.insert("Hello".to_string(), "World".to_string());
         let result = driver.message(messages).await;
         match result {

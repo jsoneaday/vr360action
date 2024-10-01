@@ -4,23 +4,30 @@
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
-struct Win32_Processor {
-    Name: String,
-    NumberOfCores: u32,
-    NumberOfLogicalProcessors: u32,
-    MaxClockSpeed: u32,
+pub struct Win32_Processor {
+    pub Name: String,
+    pub NumberOfCores: u32,
+    pub NumberOfLogicalProcessors: u32,
+    pub MaxClockSpeed: u32,
 }
 
 // Struct to hold motherboard info
 #[derive(Deserialize, Debug)]
-struct Win32_BaseBoard {
-    Manufacturer: String,
-    Product: String,
+pub struct Win32_BaseBoard {
+    pub Manufacturer: String,
+    pub Product: String,
 }
 
 // Struct to hold memory info
 #[derive(Deserialize, Debug)]
-struct Win32_OperatingSystem {
-    TotalVisibleMemorySize: u64, // In KB
-    FreePhysicalMemory: u64,     // In KB
+pub struct Win32_OperatingSystem {
+    pub TotalVisibleMemorySize: u64, // In KB
+    pub FreePhysicalMemory: u64,     // In KB
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Pc {
+    pub os: Vec<Win32_OperatingSystem>,
+    pub mb: Vec<Win32_BaseBoard>,
+    pub proc: Vec<Win32_Processor>
 }
