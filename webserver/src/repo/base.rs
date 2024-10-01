@@ -48,7 +48,7 @@ impl ConnGetter for DbRepo {
     }
 }
 
-async fn get_conn_pool() -> Pool<Postgres> {
+pub async fn get_conn_pool() -> Pool<Postgres> {
     let postgres_host = "127.0.0.1";
     let postgres_port: u16 = 5432;
     let postgres_password = "vr360action";
