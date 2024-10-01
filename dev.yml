@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:14-alpine
+    container_name: vr360action-c
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: vr360action
+      POSTGRES_USER: vr360action
+      POSTGRES_DB: vr360action
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
