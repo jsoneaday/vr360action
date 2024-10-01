@@ -18,3 +18,5 @@ tokio-tungstenite = "0.24.0"
 tungstenite = "0.24.0"
 url = "2.5.2"
 uuid = { version = "1.10.0", features = ["serde", "v4", "v7"] }
+windows = "0.58.0"
+wmi = "0.14.0"

@@ -10,6 +10,10 @@ pub mod error;
 pub mod driver {
     pub mod driver;
 }
+pub mod wmi {
+    pub mod wmi;
+    pub mod model;
+}
 
 use client::WsConnection;
 use dotenv::dotenv;

@@ -49,7 +49,6 @@ pub async fn listen(host: String, port: usize) {
                             },
                             _ => ()
                         }                        
-                        println!("Inserted RpcRequest into Data");
 
                         println!("The inserted data: {:?}", write_data);
 
