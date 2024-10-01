@@ -16,6 +16,6 @@ pub fn get_pc_info() -> Result<Pc, Box<dyn std::error::Error>> {
         mb,
         proc
     };
-    println!("pc: {:?}", pc);
+    
     Ok(pc)
 }

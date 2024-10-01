@@ -34,12 +34,10 @@ pub async fn listen(host: String, port: usize) {
             while let Some(Ok(msg)) = read.next().await {
                 match msg {
                     Message::Text(msg_text) => {
-                        println!("Received text");
                         let data = Arc::clone(&DATA);
                         let mut write_data = data.write().await;
 
                         let message: RpcRequest = serde_json::from_str(&msg_text).unwrap();
-                        println!("Deserialized RpcRequest");
 
                         match message.params {
                             RpcParams::Message(msg_param) => {
@@ -50,7 +48,7 @@ pub async fn listen(host: String, port: usize) {
                             _ => ()
                         }                        
 
-                        println!("The inserted data: {:?}", write_data);
+                        println!("Received data: {:?}", write_data);
 
                         write.send(Message::text(format!("I got your message: {:?}", write_data))).await.expect("Failed to send replay");
                     }, 

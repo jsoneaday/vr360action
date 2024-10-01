@@ -18,7 +18,7 @@ pub mod wmi {
 use client::WsConnection;
 use dotenv::dotenv;
 use driver::driver::Driver;
-use std::{collections::HashMap, env};
+use std::env;
 
 #[tokio::main]
 async fn main() {
@@ -38,9 +38,7 @@ async fn main() {
 
         let mut driver = Driver::new(conn);
 
-        let mut messages = HashMap::new();
-        messages.insert("Hello".to_string(), "World".to_string());
-        let result = driver.message(messages).await;
+        let result = driver.pc_info().await;
         match result {
             Ok(msg) => {         
                 println!("Message response {:?}", msg);    

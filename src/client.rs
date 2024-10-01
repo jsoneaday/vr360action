@@ -4,7 +4,7 @@ use futures_util::stream::{SplitSink, SplitStream};
 use tokio::net::TcpStream;
 use tungstenite::{client::IntoClientRequest, Error, Message, Result};
 use tokio_tungstenite::{connect_async, WebSocketStream, MaybeTlsStream};
-use super::{error::SurrealError, model::request::{RpcRequest, RpcParams}};
+use super::{error::MyError, model::request::{RpcRequest, RpcParams}};
 use uuid::Uuid;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -31,7 +31,7 @@ impl WsConnection {
         }
     }
 
-    pub async fn connect(&mut self) -> Result<(), SurrealError> {   
+    pub async fn connect(&mut self) -> Result<(), MyError> {   
         let conn_result = connect_async(
             format!("{}{}:{}/rpc", if self.use_tls == true { "wss://" } else { "ws://" }, 
             self.host, self.port).as_str().into_client_request().unwrap()
@@ -40,7 +40,7 @@ impl WsConnection {
         
         if let Some(err) = conn_result.as_ref().err() {
             println!("Failure: {:?}", err);
-            return Err(SurrealError::SurrealFailedToConnectError);
+            return Err(MyError::GeneralError);
         };
         
         let (ws_socket, _) = conn_result.unwrap();
@@ -65,7 +65,7 @@ impl WsConnection {
         match (&mut self.writer, &mut self.reader) {
             (Some(writer), Some(reader)) => {
                 writer.send(Message::Text(json_txt.clone())).await?;
-                println!("Message::Text sent, waiting response {}", json_txt);
+                println!("Message sent: {}", json_txt);
                 
                 loop {
                     tokio::select! {
