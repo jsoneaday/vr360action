@@ -34,11 +34,13 @@ impl Driver {
 
         match pc {
             Ok(pc) => {
+                let sys = pc.sys.iter().next().unwrap();
                 let os = pc.os.iter().next().unwrap();
                 let mb = pc.mb.iter().next().unwrap();
                 let proc = pc.proc.iter().next().unwrap();
 
                 let mut info_messages = HashMap::new();
+                info_messages.insert("sys:Name".to_string(), sys.Name.to_string());
                 info_messages.insert("os:TotalVisibleMemorySize".to_string(), os.TotalVisibleMemorySize.to_string());
                 info_messages.insert("os:FreePhysicalMemory".to_string(), os.FreePhysicalMemory.to_string());
                 info_messages.insert("mb:Manufacturer".to_string(), mb.Manufacturer.to_string());

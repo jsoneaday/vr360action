@@ -26,7 +26,13 @@ pub struct Win32_OperatingSystem {
 }
 
 #[derive(Deserialize, Debug)]
+pub struct Win32_ComputerSystem {
+    pub Name: String,
+}
+
+#[derive(Deserialize, Debug)]
 pub struct Pc {
+    pub sys: Vec<Win32_ComputerSystem>,
     pub os: Vec<Win32_OperatingSystem>,
     pub mb: Vec<Win32_BaseBoard>,
     pub proc: Vec<Win32_Processor>

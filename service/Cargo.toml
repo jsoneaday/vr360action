@@ -1,0 +1,23 @@
+[package]
+name = "service"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dotenv = "0.15.0"
+futures = "0.3.30"
+futures-util = "0.3.30"
+lazy_static = "1.5.0"
+serde = { version = "1.0.189", features = ["derive"] }
+serde_cbor = "0.11.2"
+serde_json = "1.0.107"
+serde_pack = { version = "1.1.2", package = "rmp-serde" }
+sqlx = { version = "0.8.2", features = ["postgres", "runtime-tokio-rustls", "chrono"]}
+thiserror = "1.0.64"
+tokio = { version = "1.40.0", features = ["full"] }
+tokio-tungstenite = "0.24.0"
+tungstenite = "0.24.0"
+url = "2.5.2"
+uuid = { version = "1.10.0", features = ["serde", "v4", "v7"] }
+windows = "0.58.0"
+wmi = "0.14.0"
