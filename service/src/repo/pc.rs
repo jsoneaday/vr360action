@@ -13,12 +13,6 @@ pub struct Pc {
     pub value: String
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PcInsert {
-    pub hostname: String,
-    pub key: String,
-    pub value: String
-}
 
 pub async fn insert_pc(conn: &Pool<Postgres>, hostname: String, key: String, value: String) -> Result<EntityId, Error> {
     query_as::<_, EntityId>("insert into pc (hostname, key, value) values ($1, $2, $3) returning id")

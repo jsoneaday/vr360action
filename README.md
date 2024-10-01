@@ -5,8 +5,10 @@
 1. Install postgres docker image (instructions did not indicate any datastore so using postgres with docker)
     1. open command line (not powershell) 
     2. cd to service
-    3. run set DATABASE_URL=postgres://vr360action:vr360action@localhost/vr360action
-    4. run dockerbuild.cmd
+    3. run cargo install sqlx-cli
+    4. run set DATABASE_URL=postgres://vr360action:vr360action@localhost/vr360action
+    5. run dockerbuild.cmd
+    6. sqlx migrate run --database-url postgres://vr360action:vr360action@localhost:5432/vr360action
 1. Run host
     1. open command line (not powershell)
     2. cd to target/debug
