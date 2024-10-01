@@ -6,8 +6,7 @@ use tokio::net::TcpListener;
 use tungstenite::protocol::Message;
 use tokio_tungstenite::accept_async;
 use lazy_static::lazy_static;
-
-use crate::model::request::{RpcParams, RpcRequest};
+use crate::{model::request::{RpcParams, RpcRequest}, repo::{base::{ConnGetter, DbRepo, Repository}, pc::insert_pc}};
 
 lazy_static! {
     static ref DATA: Arc<RwLock<HashMap<String, String>>> = {
@@ -23,7 +22,7 @@ pub async fn listen(host: String, port: usize) {
     println!("addr: {:?}", addr);
     let listener = TcpListener::bind(addr).await.expect("Listener failed to bind to addr");
     println!("Listener started");
-
+      
     while let Ok((stream, _)) = listener.accept().await {
         tokio::spawn(async move {
             let ws_stream = accept_async(stream).await.expect("Failed websocket handshake");  
@@ -34,23 +33,24 @@ pub async fn listen(host: String, port: usize) {
             while let Some(Ok(msg)) = read.next().await {
                 match msg {
                     Message::Text(msg_text) => {
-                        let data = Arc::clone(&DATA);
-                        let mut write_data = data.write().await;
-
                         let message: RpcRequest = serde_json::from_str(&msg_text).unwrap();
 
-                        match message.params {
+                        match message.clone().params {
                             RpcParams::Message(msg_param) => {
+                                let mut repo = DbRepo::init().await;
+                                let conn = repo.get_conn();
+                                let hostname = get_hostname(msg_param.clone());
                                 for mp in msg_param.iter() {
-                                    write_data.insert(mp.0.to_string(), mp.1.to_string());
+                                    _ = insert_pc(conn, hostname.to_string(), mp.0.to_string(), mp.1.to_string()).await;
+                                    println!("Inserted data: {:?} {:?}", mp.0.to_string(), mp.1.to_string());
                                 }
+
+                                repo.disconnect().await;                                
                             },
                             _ => ()
-                        }                        
+                        }                                       
 
-                        println!("Received data: {:?}", write_data);
-
-                        write.send(Message::text(format!("I got your message: {:?}", write_data))).await.expect("Failed to send replay");
+                        write.send(Message::text(format!("I got your message: {:?}", message))).await.expect("Failed to send replay");
                     }, 
                     _ => {
                         println!("Message given was not text: {:?}", msg);
@@ -59,4 +59,15 @@ pub async fn listen(host: String, port: usize) {
             }
         });
     }
+}
+
+fn get_hostname(data: HashMap<String, String>) -> String {
+    let mut hostname = "".to_string();
+    for mp in data.iter() {
+        if mp.0.contains("sys:Name") {
+            hostname = mp.1.to_string();
+        }
+    }
+
+    hostname
 }

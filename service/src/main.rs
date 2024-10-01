@@ -14,6 +14,10 @@ pub mod wmi {
     pub mod wmi;
     pub mod model;
 }
+pub mod repo {
+    pub mod base;
+    pub mod pc;
+}
 
 use client::WsConnection;
 use dotenv::dotenv;

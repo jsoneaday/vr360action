@@ -3,7 +3,7 @@ use serde::ser::SerializeStruct;
 use std::mem::size_of;
 use std::collections::HashMap;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum RpcParams {
     //Objects(Vec<Object>),
@@ -11,7 +11,7 @@ pub enum RpcParams {
     Array(Vec<String>)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[repr(C)]
 pub struct RpcRequest {
     pub id: String,

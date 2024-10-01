@@ -2,10 +2,11 @@
 - Follow instructions below to select which one to run
 - I did not implement a stay alive connection or automatic hardware data updating, to get latest hardware info you must run client again
 
-1. Install postgres (instructions did not indicate any datastore so using postgres with docker)
+1. Install postgres docker image (instructions did not indicate any datastore so using postgres with docker)
     1. open command line (not powershell) 
-    2. cd to target/debug
+    2. cd to service
     3. run set DATABASE_URL=postgres://vr360action:vr360action@localhost/vr360action
+    4. run dockerbuild.cmd
 1. Run host
     1. open command line (not powershell)
     2. cd to target/debug
